@@ -11,6 +11,7 @@ import Advertisement from './pages/Advertisement'
 import FireNOC from './pages/FireNOC'
 import Contact from './pages/Contact'
 import News from './pages/News'
+import Admin from './pages/Admin'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="news" element={<News />} />
           <Route path="contact" element={<Contact />} />
         </Route>
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>
   )
