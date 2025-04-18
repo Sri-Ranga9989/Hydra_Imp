@@ -1,10 +1,12 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { getNewsUpdates, NewsUpdate, testConnection } from '../services/newsService'
+import { useNavigate } from 'react-router-dom'
 
 //const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 //const dbHost = import.meta.env.VITE_DB_HOST;
 
 const NewsTicker = () => {
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false)
   const [activeUpdate, setActiveUpdate] = useState<number | null>(null)
   const [updates, setUpdates] = useState<NewsUpdate[]>([])
@@ -56,16 +58,23 @@ const NewsTicker = () => {
   const handleUpdateClick = useCallback((index: number) => {
     setActiveUpdate(index);
     if (updates[index]?.link) {
-      window.open(updates[index].link, '_blank');
+      if (updates[index].link.startsWith('/')) {
+        navigate(updates[index].link);
+      } else {
+        window.open(updates[index].link, '_blank');
+      }
     }
-  }, [updates]);
+  }, [updates, navigate]);
 
   const newsItems = useMemo(() => {
     if (!updates.length) return null;
     
+    // Only show the latest 10 items
+    const latestUpdates = updates.slice(0, 10);
+    
     return (
       <>
-        {updates.map((update, index) => (
+        {latestUpdates.map((update, index) => (
           <span 
             key={`first-${update.id}`}
             className={`inline-block mr-8 cursor-pointer transition-all duration-300 ${
@@ -79,7 +88,7 @@ const NewsTicker = () => {
             {" • "}
           </span>
         ))}
-        {updates.map((update, index) => (
+        {latestUpdates.map((update, index) => (
           <span 
             key={`second-${update.id}`}
             className={`inline-block mr-8 cursor-pointer transition-all duration-300 ${

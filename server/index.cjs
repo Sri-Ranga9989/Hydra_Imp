@@ -50,9 +50,11 @@ pool.query('SELECT NOW()', (err, res) => {
 // Get all news updates
 app.get('/api/news', async (req, res) => {
   try {
-    console.log('Fetching all news updates...');
-    const result = await pool.query('SELECT * FROM news_updates ORDER BY created_at DESC');
-    console.log('Found', result.rows.length, 'news updates');
+    console.log('Fetching latest 10 news updates...');
+    const result = await pool.query(
+      'SELECT * FROM news_updates ORDER BY created_at DESC LIMIT 10'
+    );
+    console.log(`Found ${result.rows.length} news updates`);
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching news:', err);
